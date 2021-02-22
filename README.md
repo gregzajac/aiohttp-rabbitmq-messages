@@ -2,10 +2,6 @@
 
 Solution composed of two async AioHTTP servers and message broker RabbitMQ:
 1. Server A (front-server) with REST API managing two endpoints
-field 1 | field 2 | field 3
-------- | ------- | -------
-desc 1 | desc 2 | desc 3
-
 
   endpoint  |  method  |  input  |  output  |  example
   --------  |  ------  |  -----  |  ------  |  -------
