@@ -5,8 +5,8 @@ Solution composed of two async AioHTTP servers and message broker RabbitMQ:
 
   endpoint  |  method  |  input  |  output  |  example
   --------  |  ------  |  -----  |  ------  |  -------
-  [http://localhost:8080/api]  |  POST  |  JSON {key:value}, key(str), value(int/float)  |  JSON {'message':boolean, data/message: string}  |  curl -i -X POST -H "Content-Type: application/json" -d '{"age":25}' [http://localhost:8080/api]
-  [http://localhost:8080/api]  |  GET  |  attribute key in URL  |  JSON {'message':boolean, data/message: string}  |  curl -i [http://localhost:8080/api?key=age]
+  <div>http://localhost:8080/api</div>  |  POST  |  JSON {key:value}, key(str), value(int/float)  |  JSON {'message':boolean, data/message: string}  |  <div>curl -i -X POST -H "Content-Type: application/json" -d '{"age":25}' http://localhost:8080/api</div>
+  <div>http://localhost:8080/api</div>  |  GET  |  attribute key in URL  |  JSON {'message':boolean, data/message: string}  |  <div>curl -i http://localhost:8080/api?key=age</div>
 
 
 REST API validates input data, in case of error returns an apriopriate HTTP error in JSON output. Validated data are trasferred to message broker (RabbitMQ). 
@@ -18,7 +18,7 @@ Server HTTP manages tasks in asynchonous way.
 In case of GET method Server B transfers obtaining value from the database to the message broker. In case of retrieving message with key existing in the database, Server B updates the old value with the new one. Server runs in asynchronous way handling broker and database connections and operations. SQlite3 database includes one table (ID (pk), KEY (unique text), VALUE (float)).
 
 
-## Setup (on linux)
+## Setup (linux)
 
 - Clone repository
 - Create docker images of front-server and back-server solutions
