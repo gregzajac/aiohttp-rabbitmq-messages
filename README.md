@@ -1,19 +1,19 @@
-# Async messages queuing (AIOHTTP+sqlite3 and RABBITMQ)
+# Async messages queuing (AioHTTP+SQlite3 and RabbitMQ)
 
-Solution composed of two async aiohttp servers and message broker rabbitmq:
+Solution composed of two async AioHTTP servers and message broker RabbitMQ:
 1. Server A (front-server) with REST API managing two endpoints:
-   endpoint  |  method  |  input  |  output  |  example
-   --------  |  ------  |  -----  |  ------  |  -------
-   http://localhost:8080/api  |  POST  |  JSON {key:value}, key(str), value(int/float)  |  JSON {'message':boolean, data/message: string}  |  curl -i -X POST -H "Content-Type: application/json" -d '{"age":25}' http://localhost:8080/api
-   http://localhost:8080/api  |  GET  |  attribute key in URL  |  JSON {'message':boolean, data/message: string}  |  curl -i http://localhost:8080/api?key=age
+endpoint  |  method  |  input  |  output  |  example
+--------  |  ------  |  -----  |  ------  |  -------
+http://localhost:8080/api  |  POST  |  JSON {key:value}, key(str), value(int/float)  |  JSON {'message':boolean, data/message: string}  |  curl -i -X POST -H "Content-Type: application/json" -d '{"age":25}' http://localhost:8080/api
+http://localhost:8080/api  |  GET  |  attribute key in URL  |  JSON {'message':boolean, data/message: string}  |  curl -i http://localhost:8080/api?key=age
 
 REST API validates input data, in case of error returns an apriopriate HTTP error in JSON output. Validated data are trasferred to message broker (RabbitMQ). 
 Server HTTP manages tasks in asynchonous way.
 
 2. Message broker RabbitMQ, managing messages between two servers (one direction in POST case, two directions in GET case).
 
-3. Server B (back-server) with database sqlite3, retrieves messages from message broker and saves (POST method) or gets (GET method) data from the database. 
-In case of GET method Server B transfers obtaining fromt the database value to the message broker. In case of retrieving message with existing in the database key, Server B updates the old value of existing key with the new one. Server runs in asynchronous way handling broker and database connections and operations.
+3. Server B (back-server) with database SQlite3, retrieves messages from message broker and saves (POST method) or gets (GET method) data from the database. 
+In case of GET method Server B transfers obtaining value from the database to the message broker. In case of retrieving message with key existing in the database, Server B updates the old value with the new one. Server runs in asynchronous way handling broker and database connections and operations. SQlite3 database includes one table (ID (pk), KEY (unique text), VALUE (float)).
 
 
 ## Setup (on linux)
