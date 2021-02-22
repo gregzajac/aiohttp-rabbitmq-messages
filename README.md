@@ -1,2 +1,61 @@
-# aiohttp-rabbitmq-messages
-Async messages queuing with AIOHTTP and RabbitMQ
+# Async messages queuing (AIOHTTP+sqlite3 and RABBITMQ)
+
+Solution composed of two async aiohttp servers and message broker rabbitmq:
+1. Server A (front-server) with REST API managing two endpoints:
+   endpoint  |  method  |  input  |  output  |  example
+   --------  |  ------  |  -----  |  ------  |  -------
+   http://localhost:8080/api  |  POST  |  JSON {key:value}, key(str), value(int/float)  |  JSON {'message':boolean, data/message: string}  |  curl -i -X POST -H "Content-Type: application/json" -d '{"age":25}' http://localhost:8080/api
+   http://localhost:8080/api  |  GET  |  attribute key in URL  |  JSON {'message':boolean, data/message: string}  |  curl -i http://localhost:8080/api?key=age
+
+REST API validates input data, in case of error returns an apriopriate HTTP error in JSON output. Validated data are trasferred to message broker (RabbitMQ). 
+Server HTTP manages tasks in asynchonous way.
+
+2. Message broker RabbitMQ, managing messages between two servers (one direction in POST case, two directions in GET case).
+
+3. Server B (back-server) with database sqlite3, retrieves messages from message broker and saves (POST method) or gets (GET method) data from the database. 
+In case of GET method Server B transfers obtaining fromt the database value to the message broker. In case of retrieving message with existing in the database key, Server B updates the old value of existing key with the new one. Server runs in asynchronous way handling broker and database connections and operations.
+
+
+## Setup (on linux)
+
+- Clone repository
+- Create docker images of front-server and back-server solutions
+```buildoutcfg
+# example of creating images from directories with Dockerfile
+sudo docker build -t frontserver:0.1 .
+sudo docker build -t backserver:0.1 .
+```
+- Run rabbitmq image (local rabbitmq if exists should be turned off: *service rabbitmq-server stop*)
+```buildoutcfg
+sudo docker run -d -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+```
+- Run servers images
+```buildoutcfg
+sudo docker run -it -p 8080:8080 frontserver:0.1
+sudo docker run -it backserver:0.1
+```
+
+### NOTE
+
+For closing environments stop running docker containers
+```buildoutcfg
+# checking running containers
+sudo docker ps
+
+#closing fixed container
+sudo docker stop <container_name>
+```
+
+
+## Technologies / Tools
+
+- Python 3.6.8
+- Aiohttp 3.7.3
+- Aio-pika 6.8.0
+- Aiosqlite 0.16.1
+- PyYAML 5.4.1
+- Sqlite3
+- RabbitMQ
+- Docker
+
+

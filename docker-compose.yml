@@ -1,0 +1,33 @@
+Nie działa, front-server i back-server nie mogą się polaczyc do rabbitmq (wewnetrzny IP rabbita=178.18.0.2)
+version: '3'
+
+services:
+  rabbitmq:
+    hostname: rabbitmq
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+  front-server:
+    hostname: front-server
+    build: ./front-server
+    volumes:
+      - ./front-server:/usr/src/app
+    command: gunicorn api:app -b :8080 --worker-class aiohttp.GunicornWebWorker --timeout 90 --reload --access-logfile -
+    ports:
+      - 8080:8080
+    depends_on: 
+      - rabbitmq
+
+  back-server:
+    hostname: back-server
+    build: ./back-server
+    volumes:
+      - ./back-server:/usr/src/app
+    command: python run.py
+    depends_on: 
+      - rabbitmq
