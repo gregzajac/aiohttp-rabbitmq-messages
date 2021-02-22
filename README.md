@@ -2,10 +2,10 @@
 
 Solution composed of two async AioHTTP servers and message broker RabbitMQ:
 1. Server A (front-server) with REST API managing two endpoints:
-endpoint  |  method  |  input  |  output  |  example
---------  |  ------  |  -----  |  ------  |  -------
-http://localhost:8080/api  |  POST  |  JSON {key:value}, key(str), value(int/float)  |  JSON {'message':boolean, data/message: string}  |  curl -i -X POST -H "Content-Type: application/json" -d '{"age":25}' http://localhost:8080/api
-http://localhost:8080/api  |  GET  |  attribute key in URL  |  JSON {'message':boolean, data/message: string}  |  curl -i http://localhost:8080/api?key=age
+ endpoint  |  method  |  input  |  output  |  example
+ --------  |  ------  |  -----  |  ------  |  -------
+ http://localhost:8080/api  |  POST  |  JSON {key:value}, key(str), value(int/float)  |  JSON {'message':boolean, data/message: string}  |  curl -i -X POST -H "Content-Type: application/json" -d '{"age":25}' http://localhost:8080/api
+ http://localhost:8080/api  |  GET  |  attribute key in URL  |  JSON {'message':boolean, data/message: string}  |  curl -i http://localhost:8080/api?key=age
 
 REST API validates input data, in case of error returns an apriopriate HTTP error in JSON output. Validated data are trasferred to message broker (RabbitMQ). 
 Server HTTP manages tasks in asynchonous way.
