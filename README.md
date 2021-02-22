@@ -2,6 +2,11 @@
 
 Solution composed of two async AioHTTP servers and message broker RabbitMQ:
 1. Server A (front-server) with REST API managing two endpoints
+field 1 | field 2 | field 3
+------- | ------- | -------
+desc 1 | desc 2 | desc 3
+
+
   endpoint  |  method  |  input  |  output  |  example
   --------  |  ------  |  -----  |  ------  |  -------
   http://localhost:8080/api  |  POST  |  JSON {key:value}, key(str), value(int/float)  |  JSON {'message':boolean, data/message: string}  |  curl -i -X POST -H "Content-Type: application/json" -d '{"age":25}' http://localhost:8080/api
