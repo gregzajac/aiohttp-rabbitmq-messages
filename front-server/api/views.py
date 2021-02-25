@@ -30,7 +30,9 @@ async def api_set_value(request):
                 + 'value must be a number'
         )
 
-    result = await send_set_value(json.dumps(data))
+    result = await send_set_value(
+        json.dumps(data), request.app['broker_connection']
+    )
 
     return web.json_response({
         'success': True,
@@ -44,10 +46,12 @@ async def api_get_value(request):
     if not await validate_get_data(data):
         raise web.HTTPBadRequest(
             text='Acceptable one parameter named \'key\''
-        )    
+        )
 
-    result = await send_get_value(data['key'])
-    
+    result = await send_get_value(
+        data['key'], request.app['broker_connection'], request.app['loop']
+    )
+
     return web.json_response({
         'success': True,
         'data': result

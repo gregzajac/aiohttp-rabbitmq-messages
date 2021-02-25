@@ -4,10 +4,23 @@ from multidict import MultiDictProxy
 from aio_pika import connect, Message
 from aiohttp.web_exceptions import HTTPNotFound
 
-import api
-
 
 class GetValueRpcClient:
+    '''
+    Class GetValueRpcClient manages remote procedure call in other server
+    for obtaining value for given key
+
+    parameters:
+        loop - an event loop for future response from other server
+
+    methods:
+        connect - connecting to message broker
+            parameters:
+                connection - connection object to message broker
+        on_response - setting future message obtaining from message broker
+        call - sending message to message broker
+    '''
+
     def __init__(self, loop):
         self.connection = None
         self.channel = None
@@ -44,28 +57,29 @@ class GetValueRpcClient:
         return await _future
 
 
-async def send_get_value(key):  
-    get_value_rpc = await GetValueRpcClient(
-        api.app['loop']
-    ).connect(api.app['broker_connection'])
+async def send_get_value(key, broker_connection, loop):
+    get_value_rpc = await GetValueRpcClient(loop).connect(broker_connection)
 
+    print(f' [.] Get value message with key: {key} prepared for sending')
     response = await get_value_rpc.call(key)
-
     response = response.decode()
+    print(f' [x] Obtained value: {response}')
+
     if response == '':
         raise HTTPNotFound(text=f'Value for key \'{key}\' not found')
 
     return float(response)
 
 
-async def send_set_value(message):
-    channel = await api.app['broker_connection'].channel()
+async def send_set_value(message, broker_connection):
+    channel = await broker_connection.channel()
 
     await channel.default_exchange.publish(
         Message(message.encode()),
         routing_key="set_value",
     )
     
+    print(f' [x] Sent set_value message: {message}')
     return f'Message with key and value {message} sent to save'
 
 
@@ -99,9 +113,18 @@ async def validate_get_data(data):
 
 
 async def start_background_tasks(app):
-    app['broker_connection'] = await connect(
-        url=api.app['config']['broker_url'], loop=app['loop']
-    )
+    try:
+        app['broker_connection'] = await connect(
+            url=app['config']['broker_url'], loop=app['loop']
+        )
+
+    except Exception as exc:
+        print('Error during starting background tasks: ', exc)
+
 
 async def cleanup_background_tasks(app):
-    await api.app['broker_connection'].close()
+    try:
+        await app['broker_connection'].close()
+
+    except Exception as exc:
+        print('Error during cleaning up background tasks: ', exc)
