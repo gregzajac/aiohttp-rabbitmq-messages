@@ -2,57 +2,49 @@ import json
 from aiohttp import web
 from aio_pika import connect, Message
 
-from api.utils import (send_set_value, send_get_value, 
-                       validate_set_data, validate_get_data)
+from api.utils import (
+    send_set_value,
+    send_get_value,
+    validate_set_data,
+    validate_get_data,
+)
 
 
 async def index(request):
-    return web.Response(text='Placeholder')
+    return web.Response(text="Placeholder")
 
 
 async def api_set_value(request):
-    if request.headers['Content-type'] != 'application/json':
+    if request.headers["Content-type"] != "application/json":
         raise web.HTTPUnsupportedMediaType(
-            text='Invalid Content-Type, must be \'application/json\''
+            text="Invalid Content-Type, must be 'application/json'"
         )
 
     try:
         data = await request.json()
-        
+
     except ValueError as err:
-        raise web.HTTPBadRequest(
-            text='Incorrect input data format, must be JSON'
-        )
+        raise web.HTTPBadRequest(text="Incorrect input data format, must be JSON")
 
     if not await validate_set_data(data):
         raise web.HTTPBadRequest(
-            text='Acceptable only one pair key:value in JSON format, '
-                + 'value must be a number'
+            text="Acceptable only one pair key:value in JSON format, "
+            + "value must be a number"
         )
 
-    result = await send_set_value(
-        json.dumps(data), request.app['broker_connection']
-    )
+    result = await send_set_value(json.dumps(data), request.app["broker_connection"])
 
-    return web.json_response({
-        'success': True,
-        'data': result
-    })
+    return web.json_response({"success": True, "data": result})
 
 
 async def api_get_value(request):
     data = request.query
-    
+
     if not await validate_get_data(data):
-        raise web.HTTPBadRequest(
-            text='Acceptable one parameter named \'key\''
-        )
+        raise web.HTTPBadRequest(text="Acceptable one parameter named 'key'")
 
     result = await send_get_value(
-        data['key'], request.app['broker_connection'], request.app['loop']
+        data["key"], request.app["broker_connection"], request.app["loop"]
     )
 
-    return web.json_response({
-        'success': True,
-        'data': result
-    })
+    return web.json_response({"success": True, "data": result})

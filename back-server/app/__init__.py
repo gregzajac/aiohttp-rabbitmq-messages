@@ -8,7 +8,7 @@ from app.utils import handle_get_value, handle_set_value
 from init_db import DSN, create_db
 
 
-class App():
+class App:
     """
     Class App handle main functions of app including handling connections
     with broker message and database
@@ -18,7 +18,7 @@ class App():
         broker_url - broker message URL
         db_url - database URL
 
-    Attributes: 
+    Attributes:
         loop - main asyncio event loop
         tasks_list - list of async tasks to manage in the app
         broker_url - broker message url for making connection
@@ -30,7 +30,7 @@ class App():
         start_app - starting app with establishing connections and appending tasks
         close_app - closing app (closing all tasks and event loop)
     """
-    
+
     def __init__(self, tasks_list, broker_url, db_url):
         self.loop = asyncio.get_event_loop()
         self.tasks_list = tasks_list
@@ -43,24 +43,24 @@ class App():
         self.broker_connection = await aio_pika.connect(
             url=self.broker_url, loop=self.loop
         )
-        
+
         self.db_connection = await aiosqlite.connect(
-                database=self.db_url, loop=self.loop
-            )
-        
+            database=self.db_url, loop=self.loop
+        )
+
         if self.tasks_list:
             for task in self.tasks_list:
                 await task
 
     def start_app(self):
         try:
-            print('\nApplication started. To exit press CTRL+C')
+            print("\nApplication started. To exit press CTRL+C")
 
             asyncio.ensure_future(self._start_app(), loop=self.loop)
             self.loop.run_forever()
 
         except Exception as exc:
-            print(f'Error during starting app: {exc}')
+            print(f"Error during starting app: {exc}")
 
     async def _exit(self):
         await self.db_connection.close()
@@ -70,18 +70,18 @@ class App():
         try:
             for task in asyncio.Task.all_tasks(loop=self.loop):
                 task.cancel()
-            self.loop.run_until_complete(self._exit()) 
+            self.loop.run_until_complete(self._exit())
 
-            print('\nApplication closed')
+            print("\nApplication closed")
 
         except Exception as exc:
-            print(f'Error during closing app: {exc}')
+            print(f"Error during closing app: {exc}")
 
 
 create_db()
 
 new_app = App(
     tasks_list=[handle_set_value(), handle_get_value()],
-    broker_url=config['broker_url'],
-    db_url=DSN
+    broker_url=config["broker_url"],
+    db_url=DSN,
 )

@@ -4,7 +4,7 @@ import pathlib
 from app.settings import BASE_DIR
 
 
-DSN = BASE_DIR / 'db.sqlite3'
+DSN = BASE_DIR / "db.sqlite3"
 
 
 def create_db():

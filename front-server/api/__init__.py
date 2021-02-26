@@ -7,12 +7,12 @@ from api.middlewares import setup_middlewares
 from api.utils import start_background_tasks, cleanup_background_tasks
 
 
-def create_app(config_name='development'):
+def create_app(config_name="development"):
     loop = asyncio.get_event_loop()
 
     app = web.Application(loop=loop)
-    app['loop'] = loop
-    app['config'] = config[config_name]
+    app["loop"] = loop
+    app["config"] = config[config_name]
     setup_routes(app)
     setup_middlewares(app)
 
