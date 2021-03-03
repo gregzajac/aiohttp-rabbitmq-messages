@@ -1,6 +1,3 @@
 host: localhost
 port: 8080
 broker_url: amqp://guest:guest@172.17.0.2:5672/
-# docker image running
-# broker_url: amqp://guest:guest@localhost/   # local machine running
-# broker_url: amqp://guest:guest@172.18.0.2:5672/   # docker-compose running (nie działa z plikiem docker-compose)
