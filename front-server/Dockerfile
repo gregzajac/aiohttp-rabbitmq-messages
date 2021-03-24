@@ -8,4 +8,4 @@ RUN pip3.6 install --no-cache-dir -r requirements.txt
 
 EXPOSE 8080
 
-CMD gunicorn run:app -b :8080 --worker-class aiohttp.GunicornWebWorker --timeout 90 --reload --access-logfile -
+CMD gunicorn 'api:create_app()' -b :8080 --worker-class aiohttp.GunicornWebWorker --timeout 120 --reload --access-logfile -
