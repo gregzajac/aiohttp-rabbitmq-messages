@@ -1,12 +1,12 @@
 import json
-from aiohttp import web
-from aio_pika import connect, Message
 
+from aio_pika import Message, connect
+from aiohttp import web
 from api.utils import (
-    send_set_value,
     send_get_value,
-    validate_set_data,
+    send_set_value,
     validate_get_data,
+    validate_set_data,
 )
 
 

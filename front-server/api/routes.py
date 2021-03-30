@@ -1,4 +1,4 @@
-from api.views import api_set_value, api_get_value, index
+from api.views import api_get_value, api_set_value, index
 
 
 def setup_routes(app):

@@ -1,10 +1,10 @@
 import asyncio
-from aiohttp import web
 
-from api.settings import config
-from api.routes import setup_routes
+from aiohttp import web
 from api.middlewares import setup_middlewares
-from api.utils import start_background_tasks, cleanup_background_tasks
+from api.routes import setup_routes
+from api.settings import config
+from api.utils import cleanup_background_tasks, start_background_tasks
 
 
 def create_app(config_name="development"):

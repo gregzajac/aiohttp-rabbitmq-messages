@@ -1,8 +1,8 @@
-import asyncio
 import uuid
-from multidict import MultiDictProxy
-from aio_pika import connect, Message
+
+from aio_pika import Message, connect
 from aiohttp.web_exceptions import HTTPNotFound
+from multidict import MultiDictProxy
 
 
 class GetValueRpcClient:

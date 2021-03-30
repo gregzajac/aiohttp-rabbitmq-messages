@@ -1,7 +1,6 @@
 from aiohttp import web
 from api import create_app
 
-
 if __name__ == "__main__":
     try:
         app = create_app()

@@ -1,9 +1,8 @@
 import json
 from functools import partial
 
-from aio_pika import Message
-
 import app
+from aio_pika import Message
 from app.db import get_message_value, save_message
 
 

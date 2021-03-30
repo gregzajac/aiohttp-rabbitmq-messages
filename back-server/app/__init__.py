@@ -2,7 +2,6 @@ import asyncio
 
 import aio_pika
 import aiosqlite
-
 from app.settings import config
 from app.utils import handle_get_value, handle_set_value
 from init_db import DSN, create_db
