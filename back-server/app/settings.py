@@ -1,6 +1,6 @@
 from pathlib import Path
-from yaml import safe_load
 
+from yaml import safe_load
 
 BASE_DIR = Path(__file__).parent.parent
 config_path = BASE_DIR / "config" / "app.yaml"

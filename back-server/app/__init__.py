@@ -1,9 +1,9 @@
 import asyncio
-import aiosqlite
-import aio_pika
-from pathlib import Path
 
-from app.settings import BASE_DIR, config
+import aio_pika
+import aiosqlite
+
+from app.settings import config
 from app.utils import handle_get_value, handle_set_value
 from init_db import DSN, create_db
 
@@ -80,7 +80,7 @@ class App:
 
 create_db()
 
-new_app = App(
+app = App(
     tasks_list=[handle_set_value(), handle_get_value()],
     broker_url=config["broker_url"],
     db_url=DSN,

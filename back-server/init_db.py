@@ -1,8 +1,6 @@
 import sqlite3
-import pathlib
 
 from app.settings import BASE_DIR
-
 
 DSN = BASE_DIR / "db.sqlite3"
 

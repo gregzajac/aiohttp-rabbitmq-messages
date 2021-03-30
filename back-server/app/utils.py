@@ -1,7 +1,7 @@
 import json
-import asyncio
 from functools import partial
-from aio_pika import connect, Message
+
+from aio_pika import Message
 
 import app
 from app.db import get_message_value, save_message
@@ -22,7 +22,8 @@ async def on_get_value_message(exchange, message):
         message_value = await get_message_value(app.new_app.db_connection, message_key)
 
         print(
-            f" [x] Publish callback for message key: {message_key}, value: {message_value}"
+            " [x] Publish callback for message key:"
+            f" {message_key}, value: {message_value}"
         )
         await exchange.publish(
             Message(

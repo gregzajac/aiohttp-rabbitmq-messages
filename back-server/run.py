@@ -1,8 +1,7 @@
-from app import new_app
-
+from app import app
 
 if __name__ == "__main__":
     try:
-        new_app.start_app()
+        app.start_app()
     except KeyboardInterrupt:
-        new_app.close_app()
+        app.close_app()
