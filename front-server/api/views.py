@@ -1,6 +1,5 @@
 import json
 
-from aio_pika import Message, connect
 from aiohttp import web
 from api.utils import (
     send_get_value,
@@ -23,7 +22,7 @@ async def api_set_value(request):
     try:
         data = await request.json()
 
-    except ValueError as err:
+    except ValueError:
         raise web.HTTPBadRequest(text="Incorrect input data format, must be JSON")
 
     if not await validate_set_data(data):
